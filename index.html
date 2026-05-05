@@ -4,191 +4,486 @@
 <meta charset="UTF-8">
 <title>Foodiez UI</title>
 <script src="https://cdn.tailwindcss.com"></script>
-
 <style>
-.page { display:none; }
-.page:target { display:block; }
-#dashboard { display:block; }
+.page { display: none; }
+.page:target { display: block; }
+#dashboard { display: block; }
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
 </style>
 </head>
+<body class="bg-gray-50 h-screen flex overflow-hidden">
 
-<body class="bg-slate-100 flex h-screen">
-
-<!-- SIDEBAR -->
-<aside class="w-56 bg-white border-r p-4 flex flex-col">
-  <h1 class="font-bold text-lg mb-6">Foodiez</h1>
-
-  <nav class="flex flex-col gap-2 text-sm">
-    <a href="#dashboard" class="p-2 rounded bg-blue-100 text-blue-600">Dashboard</a>
-    <a href="#orders" class="p-2 rounded hover:bg-slate-100">Orders</a>
-  </nav>
+<aside class="w-[220px] bg-white border-r border-gray-200 flex flex-col justify-between min-h-screen">
+<div>
+<div class="flex items-center gap-3 px-5 py-6">
+<div class="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">F</div>
+<span class="text-lg font-bold text-gray-800">Foodiez</span>
+</div>
+<nav class="mt-2 px-3 space-y-1">
+<a href="#dashboard" class="flex items-center gap-3 px-3 py-2.5 bg-blue-50 text-blue-600 rounded-lg text-sm font-medium transition">
+<svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+Dashboard
+</a>
+<a href="#orders" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-gray-100 rounded-lg text-sm font-medium transition">
+<svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
+Orders
+</a>
+<a href="#neworder" class="flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-gray-100 rounded-lg text-sm font-medium transition">
+<svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+New Order
+</a>
+</nav>
+</div>
+<div class="px-4 py-4 border-t border-gray-200">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 bg-gray-200 rounded-full flex items-center justify-center">
+<svg class="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+</div>
+<div>
+<p class="text-sm font-semibold text-gray-800">Admin User</p>
+<p class="text-xs text-gray-500">admin@foodiez.com</p>
+</div>
+</div>
+</div>
 </aside>
 
+<main class="flex-1 overflow-y-auto scrollbar-hide">
 
-
-<!-- MAIN -->
-<main class="flex-1 p-6 overflow-y-auto">
-
-<!-- ================= DASHBOARD ================= -->
+<!-- DASHBOARD -->
 <div id="dashboard" class="page">
-
-<div class="flex justify-between mb-6">
-  <div>
-    <h1 class="text-xl font-bold">Dashboard overview</h1>
-    <p class="text-sm text-gray-400">Manage your restaurant orders</p>
-  </div>
-  <button class="bg-blue-600 text-white px-4 py-2 rounded-lg">+ New Order</button>
+<header class="bg-white border-b border-gray-200 px-8 py-5 flex items-center justify-between sticky top-0 z-10">
+<div>
+<h1 class="text-2xl font-bold text-gray-800">Dashboard Overview</h1>
+<p class="text-sm text-gray-500 mt-0.5">Manage your restaurant orders in real-time</p>
+</div>
+<div class="flex items-center gap-4">
+<button class="relative w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition">
+<svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+<span class="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full"></span>
+</button>
+<a href="#neworder" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 transition">
+<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+New Order
+</a>
+</div>
+</header>
+<div class="px-8 py-6">
+<div class="grid grid-cols-5 gap-4 mb-8">
+<div class="bg-white border border-gray-200 rounded-xl p-5">
+<div class="flex items-center justify-between mb-3">
+<span class="text-sm text-gray-500 font-medium">Total Orders</span>
+<div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+<svg class="w-4 h-4 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
+</div>
+</div>
+<p class="text-3xl font-bold text-gray-800">156</p>
+</div>
+<div class="bg-white border border-gray-200 rounded-xl p-5">
+<div class="flex items-center justify-between mb-3">
+<span class="text-sm text-gray-500 font-medium">Pending</span>
+<div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+<svg class="w-4 h-4 text-yellow-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+</div>
+</div>
+<p class="text-3xl font-bold text-gray-800">12</p>
+</div>
+<div class="bg-white border border-gray-200 rounded-xl p-5">
+<div class="flex items-center justify-between mb-3">
+<span class="text-sm text-gray-500 font-medium">Accepted</span>
+<div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+<svg class="w-4 h-4 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" x2="18" y1="17" y2="17"/></svg>
+</div>
+</div>
+<p class="text-3xl font-bold text-gray-800">24</p>
+</div>
+<div class="bg-white border border-gray-200 rounded-xl p-5">
+<div class="flex items-center justify-between mb-3">
+<span class="text-sm text-gray-500 font-medium">Completed</span>
+<div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+<svg class="w-4 h-4 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+</div>
+</div>
+<p class="text-3xl font-bold text-gray-800">115</p>
+</div>
+<div class="bg-white border border-gray-200 rounded-xl p-5">
+<div class="flex items-center justify-between mb-3">
+<span class="text-sm text-gray-500 font-medium">Rejected</span>
+<div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+<svg class="w-4 h-4 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+</div>
+</div>
+<p class="text-3xl font-bold text-gray-800">5</p>
+</div>
+</div>
+<div class="mb-6 flex items-center justify-between">
+<h2 class="text-xl font-bold text-gray-800">Recent Orders</h2>
+<div class="flex gap-1 bg-gray-100 rounded-lg p-1">
+<button class="px-4 py-1.5 text-sm font-medium text-blue-600 bg-white rounded-md shadow-sm">All</button>
+<button class="px-4 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-700 rounded-md transition">Pending</button>
+<button class="px-4 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-700 rounded-md transition">Accepted</button>
+<button class="px-4 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-700 rounded-md transition">Completed</button>
+</div>
+</div>
+<div class="grid grid-cols-3 gap-5">
+<!-- Cards -->
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+<div class="h-1 bg-yellow-400"></div>
+<div class="p-5">
+<div class="flex items-center justify-between mb-4">
+<div><h3 class="text-base font-semibold text-gray-800">Ahmed Z.</h3><p class="text-xs text-gray-400">Just now</p></div>
+<span class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">Pending</span>
+</div>
+<div class="space-y-1.5 mb-4">
+<p class="text-sm text-gray-600">&#8226; 1x Margherita Pizza</p>
+<p class="text-sm text-gray-600">&#8226; 2x Soda</p>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-gray-100">
+<p class="text-lg font-bold text-gray-800">140 MAD</p>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 bg-red-100 hover:bg-red-200 text-red-500 rounded-full flex items-center justify-center transition">
+<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+</button>
+<button class="w-8 h-8 bg-green-100 hover:bg-green-200 text-green-500 rounded-full flex items-center justify-center transition">
+<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+</button>
+<button class="w-8 h-8 bg-gray-100 hover:bg-gray-200 text-gray-400 rounded-full flex items-center justify-center transition">
+<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+<div class="h-1 bg-yellow-400"></div>
+<div class="p-5">
+<div class="flex items-center justify-between mb-4">
+<div><h3 class="text-base font-semibold text-gray-800">Sarah K.</h3><p class="text-xs text-gray-400">5 min ago</p></div>
+<span class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">Pending</span>
+</div>
+<div class="space-y-1.5 mb-4">
+<p class="text-sm text-gray-600">&#8226; 2x Burger Menu</p>
+<p class="text-sm text-gray-600">&#8226; 1x Fries</p>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-gray-100">
+<p class="text-lg font-bold text-gray-800">180 MAD</p>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 bg-red-100 hover:bg-red-200 text-red-500 rounded-full flex items-center justify-center transition">
+<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+</button>
+<button class="w-8 h-8 bg-green-100 hover:bg-green-200 text-green-500 rounded-full flex items-center justify-center transition">
+<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+</button>
+<button class="w-8 h-8 bg-gray-100 hover:bg-gray-200 text-gray-400 rounded-full flex items-center justify-center transition">
+<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+<div class="h-1 bg-blue-400"></div>
+<div class="p-5">
+<div class="flex items-center justify-between mb-4">
+<div><h3 class="text-base font-semibold text-gray-800">Karim M.</h3><p class="text-xs text-gray-400">12 min ago</p></div>
+<span class="bg-blue-100 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">Accepted</span>
+</div>
+<div class="space-y-1.5 mb-4">
+<p class="text-sm text-gray-600">&#8226; 1x Caesar Salad</p>
+<p class="text-sm text-gray-600">&#8226; 1x Water</p>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-gray-100">
+<p class="text-lg font-bold text-gray-800">85 MAD</p>
+<div class="flex items-center gap-2">
+<button class="bg-green-500 hover:bg-green-600 text-white text-xs font-medium px-4 py-1.5 rounded-full transition">Complete</button>
+<button class="w-8 h-8 bg-gray-100 hover:bg-gray-200 text-gray-400 rounded-full flex items-center justify-center transition">
+<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+<div class="h-1 bg-green-400"></div>
+<div class="p-5">
+<div class="flex items-center justify-between mb-4">
+<div><h3 class="text-base font-semibold text-gray-800">Nadia T.</h3><p class="text-xs text-gray-400">1 hour ago</p></div>
+<span class="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">Completed</span>
+</div>
+<div class="space-y-1.5 mb-4">
+<p class="text-sm text-gray-600">&#8226; 3x Sushi Platter</p>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-gray-100">
+<p class="text-lg font-bold text-gray-800">450 MAD</p>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 bg-gray-100 hover:bg-gray-200 text-gray-400 rounded-full flex items-center justify-center transition">
+<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+<div class="h-1 bg-red-400"></div>
+<div class="p-5">
+<div class="flex items-center justify-between mb-4">
+<div><h3 class="text-base font-semibold text-gray-800">Omar A.</h3><p class="text-xs text-gray-400">2 hours ago</p></div>
+<span class="bg-red-100 text-red-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">Rejected</span>
+</div>
+<div class="space-y-1.5 mb-4">
+<p class="text-sm text-gray-600">&#8226; 1x Pasta Bolognese</p>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-gray-100">
+<p class="text-lg font-bold text-gray-800">95 MAD</p>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 bg-gray-100 hover:bg-gray-200 text-gray-400 rounded-full flex items-center justify-center transition">
+<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+</button>
+</div>
+</div>
+</div>
+</div>
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+<div class="h-1 bg-green-400"></div>
+<div class="p-5">
+<div class="flex items-center justify-between mb-4">
+<div><h3 class="text-base font-semibold text-gray-800">Youssef A.</h3><p class="text-xs text-gray-400">3 hours ago</p></div>
+<span class="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full uppercase tracking-wide">Completed</span>
+</div>
+<div class="space-y-1.5 mb-4">
+<p class="text-sm text-gray-600">&#8226; 2x Tacos Mix</p>
+<p class="text-sm text-gray-600">&#8226; 1x Frites</p>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-gray-100">
+<p class="text-lg font-bold text-gray-800">110 MAD</p>
+<div class="flex items-center gap-2">
+<button class="w-8 h-8 bg-gray-100 hover:bg-gray-200 text-gray-400 rounded-full flex items-center justify-center transition">
+<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg>
+</button>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
 </div>
 
-<!-- STATS -->
-<div class="grid grid-cols-5 gap-4 mb-6">
-
-  <div class="bg-white p-4 rounded-xl border">
-    <p class="text-xs text-gray-400">Total Orders</p>
-    <p class="text-2xl font-bold mt-2">156</p>
-  </div>
-
-  <div class="bg-white p-4 rounded-xl border">
-    <p class="text-xs text-gray-400">Pending</p>
-    <p class="text-2xl font-bold text-yellow-500 mt-2">12</p>
-  </div>
-
-  <div class="bg-white p-4 rounded-xl border">
-    <p class="text-xs text-gray-400">Accepted</p>
-    <p class="text-2xl font-bold text-blue-500 mt-2">24</p>
-  </div>
-
-  <div class="bg-white p-4 rounded-xl border">
-    <p class="text-xs text-gray-400">Completed</p>
-    <p class="text-2xl font-bold text-green-500 mt-2">115</p>
-  </div>
-
-  <div class="bg-white p-4 rounded-xl border">
-    <p class="text-xs text-gray-400">Rejected</p>
-    <p class="text-2xl font-bold text-red-500 mt-2">5</p>
-  </div>
-
-</div>
-
-
-
-<!-- RECENT -->
-<div class="bg-white p-5 rounded-xl border">
-
-  <div class="flex justify-between mb-4">
-    <h2 class="font-semibold">Recent Orders</h2>
-    <div class="flex gap-2 text-xs">
-      <span class="bg-blue-100 text-blue-600 px-3 py-1 rounded">All</span>
-      <span class="px-3 py-1">Pending</span>
-      <span class="px-3 py-1">Accepted</span>
-      <span class="px-3 py-1">Completed</span>
-    </div>
-  </div>
-
-  <div class="grid grid-cols-3 gap-4">
-
-    <!-- CARD -->
-    <div class="bg-white border rounded-xl p-4 relative">
-      <div class="absolute top-0 left-0 w-full h-1 bg-yellow-400 rounded-t-xl"></div>
-
-      <div class="flex justify-between mb-2">
-        <p class="font-semibold">Ahmed Z.</p>
-        <span class="bg-yellow-100 text-yellow-600 text-xs px-2 py-1 rounded">Pending</span>
-      </div>
-
-      <p class="text-xs text-gray-400 mb-2">• Pizza<br>• Soda</p>
-
-      <div class="flex justify-between items-center mt-4">
-        <span class="font-bold">140 MAD</span>
-      </div>
-    </div>
-
-    <!-- CARD -->
-    <div class="bg-white border rounded-xl p-4 relative">
-      <div class="absolute top-0 left-0 w-full h-1 bg-blue-500 rounded-t-xl"></div>
-
-      <div class="flex justify-between mb-2">
-        <p class="font-semibold">Karim M.</p>
-        <span class="bg-blue-100 text-blue-600 text-xs px-2 py-1 rounded">Accepted</span>
-      </div>
-
-      <p class="text-xs text-gray-400 mb-2">• Salad<br>• Water</p>
-
-      <div class="flex justify-between items-center mt-4">
-        <span class="font-bold">85 MAD</span>
-        <button class="bg-blue-600 text-white text-xs px-3 py-1 rounded">Complete</button>
-      </div>
-    </div>
-
-    <!-- CARD -->
-    <div class="bg-white border rounded-xl p-4 relative">
-      <div class="absolute top-0 left-0 w-full h-1 bg-green-500 rounded-t-xl"></div>
-
-      <div class="flex justify-between mb-2">
-        <p class="font-semibold">Nadia T.</p>
-        <span class="bg-green-100 text-green-600 text-xs px-2 py-1 rounded">Completed</span>
-      </div>
-
-      <p class="text-xs text-gray-400 mb-2">• Sushi</p>
-
-      <div class="flex justify-between items-center mt-4">
-        <span class="font-bold">450 MAD</span>
-      </div>
-    </div>
-
-  </div>
-
-</div>
-
-</div>
-
-<!-- ================= ORDERS ================= -->
+<!-- ORDERS -->
 <div id="orders" class="page">
-
-<div class="flex justify-between mb-6">
-  <h1 class="text-xl font-bold">All Orders</h1>
-  <button class="bg-blue-600 text-white px-4 py-2 rounded-lg">+ New Order</button>
+<header class="bg-white border-b border-gray-200 px-8 py-5 flex items-center justify-between sticky top-0 z-10">
+<div>
+<h1 class="text-2xl font-bold text-gray-800">All Orders</h1>
+<p class="text-sm text-gray-500 mt-0.5">View and manage all restaurant orders</p>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative">
+<svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+<input type="text" placeholder="Search orders..." class="pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-64">
+</div>
+<a href="#neworder" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 transition">
+<svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+New Order
+</a>
+</div>
+</header>
+<div class="px-8 py-6">
+<div class="flex items-center justify-between mb-6">
+<div class="flex gap-1">
+<button class="px-4 py-2 text-sm font-medium text-blue-600 border-b-2 border-blue-600 flex items-center gap-2">All Orders<span class="bg-blue-100 text-blue-600 text-xs font-semibold px-2 py-0.5 rounded-full">156</span></button>
+<button class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 flex items-center gap-2 transition">Pending<span class="bg-gray-100 text-gray-500 text-xs font-semibold px-2 py-0.5 rounded-full">12</span></button>
+<button class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 flex items-center gap-2 transition">Accepted<span class="bg-gray-100 text-gray-500 text-xs font-semibold px-2 py-0.5 rounded-full">24</span></button>
+<button class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 flex items-center gap-2 transition">Completed<span class="bg-gray-100 text-gray-500 text-xs font-semibold px-2 py-0.5 rounded-full">115</span></button>
+<button class="px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 flex items-center gap-2 transition">Rejected<span class="bg-gray-100 text-gray-500 text-xs font-semibold px-2 py-0.5 rounded-full">5</span></button>
+</div>
+<button class="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition">
+<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/></svg>
+Filter
+</button>
+</div>
+<div class="grid grid-cols-3 gap-5">
+<!-- 8 Order Cards -->
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+<div class="h-1.5 bg-yellow-400"></div>
+<div class="p-5">
+<div class="flex items-center justify-between mb-3"><div><h3 class="text-base font-semibold text-gray-800">Ahmed Z.</h3><p class="text-xs text-gray-400 mt-0.5">Just now</p></div><span class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-3 py-1 rounded-full">Pending</span></div>
+<div class="space-y-2 mb-4"><div class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-gray-300 rounded-full"></div><p class="text-sm text-gray-600">1x Margherita Pizza</p></div><div class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-gray-300 rounded-full"></div><p class="text-sm text-gray-600">2x Soda</p></div></div>
+<div class="flex items-center justify-between pt-3 border-t border-gray-100"><p class="text-lg font-bold text-gray-800">140 MAD</p><div class="flex items-center gap-2"><button class="w-8 h-8 hover:bg-red-50 text-red-400 hover:text-red-500 rounded-full flex items-center justify-center transition"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button class="w-8 h-8 hover:bg-green-50 text-green-400 hover:text-green-500 rounded-full flex items-center justify-center transition"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></button><button class="w-8 h-8 hover:bg-gray-100 text-gray-400 rounded-full flex items-center justify-center transition"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button></div></div>
+</div>
+</div>
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+<div class="h-1.5 bg-yellow-400"></div>
+<div class="p-5">
+<div class="flex items-center justify-between mb-3"><div><h3 class="text-base font-semibold text-gray-800">Sarah K.</h3><p class="text-xs text-gray-400 mt-0.5">5 min ago</p></div><span class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-3 py-1 rounded-full">Pending</span></div>
+<div class="space-y-2 mb-4"><div class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-gray-300 rounded-full"></div><p class="text-sm text-gray-600">2x Burger Menu</p></div><div class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-gray-300 rounded-full"></div><p class="text-sm text-gray-600">1x Fries</p></div></div>
+<div class="flex items-center justify-between pt-3 border-t border-gray-100"><p class="text-lg font-bold text-gray-800">180 MAD</p><div class="flex items-center gap-2"><button class="w-8 h-8 hover:bg-red-50 text-red-400 hover:text-red-500 rounded-full flex items-center justify-center transition"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button class="w-8 h-8 hover:bg-green-50 text-green-400 hover:text-green-500 rounded-full flex items-center justify-center transition"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></button><button class="w-8 h-8 hover:bg-gray-100 text-gray-400 rounded-full flex items-center justify-center transition"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button></div></div>
+</div>
+</div>
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+<div class="h-1.5 bg-blue-500"></div>
+<div class="p-5">
+<div class="flex items-center justify-between mb-3"><div><h3 class="text-base font-semibold text-gray-800">Karim M.</h3><p class="text-xs text-gray-400 mt-0.5">12 min ago</p></div><span class="bg-blue-100 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full">Accepted</span></div>
+<div class="space-y-2 mb-4"><div class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-gray-300 rounded-full"></div><p class="text-sm text-gray-600">1x Caesar Salad</p></div><div class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-gray-300 rounded-full"></div><p class="text-sm text-gray-600">1x Water</p></div></div>
+<div class="flex items-center justify-between pt-3 border-t border-gray-100"><p class="text-lg font-bold text-gray-800">85 MAD</p><div class="flex items-center gap-2"><button class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium px-4 py-1.5 rounded-lg transition">Complete</button><button class="w-8 h-8 hover:bg-gray-100 text-gray-400 rounded-full flex items-center justify-center transition"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button></div></div>
+</div>
+</div>
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+<div class="h-1.5 bg-green-500"></div>
+<div class="p-5">
+<div class="flex items-center justify-between mb-3"><div><h3 class="text-base font-semibold text-gray-800">Nadia T.</h3><p class="text-xs text-gray-400 mt-0.5">1 hour ago</p></div><span class="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">Completed</span></div>
+<div class="space-y-2 mb-4"><div class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-gray-300 rounded-full"></div><p class="text-sm text-gray-600">3x Sushi Platter</p></div></div>
+<div class="flex items-center justify-between pt-3 border-t border-gray-100"><p class="text-lg font-bold text-gray-800">450 MAD</p><div class="flex items-center gap-2"><button class="w-8 h-8 hover:bg-gray-100 text-gray-400 rounded-full flex items-center justify-center transition"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button></div></div>
+</div>
+</div>
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+<div class="h-1.5 bg-red-500"></div>
+<div class="p-5">
+<div class="flex items-center justify-between mb-3"><div><h3 class="text-base font-semibold text-gray-800">Omar B.</h3><p class="text-xs text-gray-400 mt-0.5">2 hours ago</p></div><span class="bg-red-100 text-red-700 text-xs font-semibold px-3 py-1 rounded-full">Rejected</span></div>
+<div class="space-y-2 mb-4"><div class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-gray-300 rounded-full"></div><p class="text-sm text-gray-600">1x Pasta Bolognese</p></div></div>
+<div class="flex items-center justify-between pt-3 border-t border-gray-100"><p class="text-lg font-bold text-gray-800">95 MAD</p><div class="flex items-center gap-2"><button class="w-8 h-8 hover:bg-gray-100 text-gray-400 rounded-full flex items-center justify-center transition"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button></div></div>
+</div>
+</div>
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+<div class="h-1.5 bg-green-500"></div>
+<div class="p-5">
+<div class="flex items-center justify-between mb-3"><div><h3 class="text-base font-semibold text-gray-800">Youssef A.</h3><p class="text-xs text-gray-400 mt-0.5">3 hours ago</p></div><span class="bg-green-100 text-green-700 text-xs font-semibold px-3 py-1 rounded-full">Completed</span></div>
+<div class="space-y-2 mb-4"><div class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-gray-300 rounded-full"></div><p class="text-sm text-gray-600">2x Tacos Mix</p></div><div class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-gray-300 rounded-full"></div><p class="text-sm text-gray-600">1x Frites</p></div></div>
+<div class="flex items-center justify-between pt-3 border-t border-gray-100"><p class="text-lg font-bold text-gray-800">110 MAD</p><div class="flex items-center gap-2"><button class="w-8 h-8 hover:bg-gray-100 text-gray-400 rounded-full flex items-center justify-center transition"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button></div></div>
+</div>
+</div>
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+<div class="h-1.5 bg-yellow-400"></div>
+<div class="p-5">
+<div class="flex items-center justify-between mb-3"><div><h3 class="text-base font-semibold text-gray-800">Fatima E.</h3><p class="text-xs text-gray-400 mt-0.5">10 min ago</p></div><span class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-3 py-1 rounded-full">Pending</span></div>
+<div class="space-y-2 mb-4"><div class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-gray-300 rounded-full"></div><p class="text-sm text-gray-600">1x Veggie Pizza</p></div></div>
+<div class="flex items-center justify-between pt-3 border-t border-gray-100"><p class="text-lg font-bold text-gray-800">90 MAD</p><div class="flex items-center gap-2"><button class="w-8 h-8 hover:bg-red-50 text-red-400 hover:text-red-500 rounded-full flex items-center justify-center transition"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></button><button class="w-8 h-8 hover:bg-green-50 text-green-400 hover:text-green-500 rounded-full flex items-center justify-center transition"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></button><button class="w-8 h-8 hover:bg-gray-100 text-gray-400 rounded-full flex items-center justify-center transition"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button></div></div>
+</div>
+</div>
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden">
+<div class="h-1.5 bg-blue-500"></div>
+<div class="p-5">
+<div class="flex items-center justify-between mb-3"><div><h3 class="text-base font-semibold text-gray-800">Hassan C.</h3><p class="text-xs text-gray-400 mt-0.5">20 min ago</p></div><span class="bg-blue-100 text-blue-700 text-xs font-semibold px-3 py-1 rounded-full">Accepted</span></div>
+<div class="space-y-2 mb-4"><div class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-gray-300 rounded-full"></div><p class="text-sm text-gray-600">4x Shawarma</p></div><div class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-gray-300 rounded-full"></div><p class="text-sm text-gray-600">2x Soda</p></div></div>
+<div class="flex items-center justify-between pt-3 border-t border-gray-100"><p class="text-lg font-bold text-gray-800">220 MAD</p><div class="flex items-center gap-2"><button class="bg-blue-600 hover:bg-blue-700 text-white text-xs font-medium px-4 py-1.5 rounded-lg transition">Complete</button><button class="w-8 h-8 hover:bg-gray-100 text-gray-400 rounded-full flex items-center justify-center transition"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></button></div></div>
+</div>
+</div>
+</div>
+</div>
 </div>
 
-<div class="grid grid-cols-3 gap-4">
-
-  <!-- ORDER CARD -->
-  <div class="bg-white border rounded-xl p-4 relative">
-    <div class="absolute top-0 left-0 w-full h-1 bg-yellow-400 rounded-t-xl"></div>
-
-    <div class="flex justify-between mb-2">
-      <p class="font-semibold">Sarah K.</p>
-      <span class="bg-yellow-100 text-yellow-600 text-xs px-2 py-1 rounded">Pending</span>
-    </div>
-
-    <p class="text-xs text-gray-400 mb-2">• Burger<br>• Fries</p>
-
-    <div class="flex justify-between mt-4 items-center">
-      <span class="font-bold">180 MAD</span>
-    </div>
-  </div>
-
-  <!-- ORDER CARD -->
-  <div class="bg-white border rounded-xl p-4 relative">
-    <div class="absolute top-0 left-0 w-full h-1 bg-red-500 rounded-t-xl"></div>
-
-    <div class="flex justify-between mb-2">
-      <p class="font-semibold">Omar B.</p>
-      <span class="bg-red-100 text-red-600 text-xs px-2 py-1 rounded">Rejected</span>
-    </div>
-
-    <p class="text-xs text-gray-400 mb-2">• Pasta</p>
-
-    <div class="flex justify-between mt-4">
-      <span class="font-bold">95 MAD</span>
-    </div>
-  </div>
-
+<!-- NEW ORDER -->
+<div id="neworder" class="page">
+<header class="bg-white border-b border-gray-200 px-8 py-5 flex items-center justify-between sticky top-0 z-10">
+<div>
+<h1 class="text-2xl font-bold text-gray-800">Create New Order</h1>
+<p class="text-sm text-gray-500 mt-0.5">Manually add a new order to the system</p>
 </div>
-
+</header>
+<div class="px-8 py-8">
+<div class="flex gap-8 max-w-5xl">
+<div class="w-[280px] flex-shrink-0">
+<p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Order Card</p>
+<div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+<div class="h-1.5 bg-yellow-400"></div>
+<div class="p-5">
+<div class="flex items-center justify-between mb-3">
+<div><h3 class="text-base font-semibold text-gray-800">Customer</h3><p class="text-xs text-gray-400 mt-0.5">Today</p></div>
+<span class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-3 py-1 rounded-full">PENDING</span>
+</div>
+<div class="space-y-2 mb-4 min-h-[60px]">
+<div class="flex items-center gap-2 text-gray-300"><div class="w-1.5 h-1.5 bg-gray-200 rounded-full"></div><p class="text-sm">Item 1</p></div>
+</div>
+<div class="flex items-center justify-between pt-3 border-t border-gray-100">
+<p class="text-lg font-bold text-gray-800">0.00</p>
+<div class="flex items-center gap-2">
+<div class="w-8 h-8 text-red-300 rounded-full flex items-center justify-center"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg></div>
+<div class="w-8 h-8 text-green-300 rounded-full flex items-center justify-center"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg></div>
+<div class="w-8 h-8 text-gray-300 rounded-full flex items-center justify-center"><svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/><line x1="10" x2="10" y1="11" y2="17"/><line x1="14" x2="14" y1="11" y2="17"/></svg></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="flex-1 bg-white border border-gray-200 rounded-xl p-6">
+<div class="mb-8">
+<h3 class="text-base font-semibold text-gray-800 mb-4">Customer Details</h3>
+<div>
+<label class="block text-xs text-gray-500 mb-1.5">Customer Name</label>
+<input type="text" placeholder="e.g. John Doe" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+</div>
+</div>
+<div class="mb-8">
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-base font-semibold text-gray-800">Order Items</h3>
+<button type="button" class="text-blue-600 text-sm font-medium flex items-center gap-1 hover:text-blue-700 transition">
+<svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+Add Item
+</button>
+</div>
+<div class="space-y-3">
+<div class="flex items-center gap-3">
+<select class="flex-1 px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+<option value="" disabled selected>Select an item...</option>
+<option value="Margherita Pizza">Margherita Pizza</option>
+<option value="Burger Menu">Burger Menu</option>
+<option value="Caesar Salad">Caesar Salad</option>
+<option value="Sushi Platter">Sushi Platter</option>
+<option value="Pasta Bolognese">Pasta Bolognese</option>
+<option value="Tacos Mix">Tacos Mix</option>
+<option value="Shawarma">Shawarma</option>
+<option value="Fries">Fries</option>
+<option value="Soda">Soda</option>
+<option value="Water">Water</option>
+</select>
+<div class="flex items-center gap-2 px-3 py-2.5 bg-white border border-gray-200 rounded-lg">
+<span class="text-xs text-gray-400">Qty:</span>
+<input type="number" value="2" min="1" class="w-12 text-sm text-gray-700 text-center focus:outline-none">
+</div>
+<div class="w-24 px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-400 text-center">120 MAD</div>
+<button type="button" class="w-8 h-8 flex items-center justify-center text-gray-300 hover:text-red-400 transition">
+<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+</button>
+</div>
+<div class="flex items-center gap-3">
+<select class="flex-1 px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+<option value="" disabled selected>Select an item...</option>
+<option value="Margherita Pizza">Margherita Pizza</option>
+<option value="Burger Menu">Burger Menu</option>
+<option value="Caesar Salad">Caesar Salad</option>
+<option value="Sushi Platter">Sushi Platter</option>
+<option value="Pasta Bolognese">Pasta Bolognese</option>
+<option value="Tacos Mix">Tacos Mix</option>
+<option value="Shawarma">Shawarma</option>
+<option value="Fries">Fries</option>
+<option value="Soda">Soda</option>
+<option value="Water">Water</option>
+</select>
+<div class="flex items-center gap-2 px-3 py-2.5 bg-white border border-gray-200 rounded-lg">
+<span class="text-xs text-gray-400">Qty:</span>
+<input type="number" value="1" min="1" class="w-12 text-sm text-gray-700 text-center focus:outline-none">
+</div>
+<div class="w-24 px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-400 text-center">0 MAD</div>
+<button type="button" class="w-8 h-8 flex items-center justify-center text-gray-300 hover:text-red-400 transition">
+<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+</button>
+</div>
+</div>
+</div>
+<div class="flex items-center justify-between py-4 border-t border-gray-100 mb-6">
+<h3 class="text-base font-semibold text-gray-800">Total Price</h3>
+<p class="text-xl font-bold text-gray-800">120 MAD</p>
+</div>
+<div class="flex items-center justify-end gap-3">
+<a href="#orders" class="px-6 py-2.5 border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition">Cancel</a>
+<button type="submit" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium flex items-center gap-2 transition">
+<svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+Submit Order
+</button>
+</div>
+</div>
+</div>
+</div>
 </div>
 
 </main>
-
 </body>
 </html>
