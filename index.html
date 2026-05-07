@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<title>Foodiez UI</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<style>
+  .page { display: none; }
+  .page.active { display: block; }
+  .scrollbar-hide::-webkit-scrollbar { display: none; }
+  .scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+  .nav-link { transition: all 0.15s; }
+  .nav-link.active { background: #EFF6FF; color: #2563EB; }
+  .filter-tab.active { color: #2563EB; border-bottom: 2px solid #2563EB; }
+  .filter-tab { border-bottom: 2px solid transparent; }
+  .dashboard-tab.active { background: white; color: #2563EB; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+  .toast {
+    position: fixed; bottom: 24px; right: 24px; z-index: 9999;
+    background: #1f2937; color: white; padding: 12px 20px;
+    border-radius: 10px; font-size: 14px; font-weight: 500;
+    transform: translateY(80px); opacity: 0;
+    transition: all 0.3s ease;
+    display: flex; align-items: center; gap: 10px;
+  }
+  .toast.show { transform: translateY(0); opacity: 1; }
+  .toast.success { background: #059669; }
+  .toast.error { background: #DC2626; }
+  .modal-overlay {
+    position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+    z-index: 50; display: flex; align-items: center; justify-content: center;
+    opacity: 0; pointer-events: none; transition: opacity 0.2s;
+  }
+  .modal-overlay.open { opacity: 1; pointer-events: all; }
+  .modal-box { transform: scale(0.95); transition: transform 0.2s; }
+  .modal-overlay.open .modal-box { transform: scale(1); }
+  .badge-pulse { animation: pulse 2s infinite; }
+  @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
+  .card-enter {
+    animation: cardIn 0.3s ease forwards;
+  }
+  @keyframes cardIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+</style>
+</head>
+<body class="bg-gray-50 h-screen flex overflow-hidden">
+ 
+<!-- TOAST -->
+<div id="toast" class="toast">
+  <span id="toast-icon"></span>
+  <span id="toast-msg"></span>
+</div>
+ 
+<!-- DELETE CONFIRM MODAL -->
+<div id="deleteModal" class="modal-overlay">
+  <div class="modal-box bg-white rounded-2xl shadow-xl p-6 w-80">
+    <div class="flex items-center justify-center w-12 h-12 bg-red-100 rounded-full mx-auto mb-4">
+      <svg class="w-6 h-6 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 6h18"/><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"/><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"/></svg>
+    </div>
+    <h3 class="text-center text-base font-bold text-gray-800 mb-1">Delete Order?</h3>
+    <p class="text-center text-sm text-gray-500 mb-5">This action cannot be undone.</p>
+    <div class="flex gap-3">
+      <button onclick="closeDeleteModal()" class="flex-1 py-2.5 border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition">Cancel</button>
+      <button onclick="confirmDelete()" class="flex-1 py-2.5 bg-red-500 hover:bg-red-600 text-white rounded-lg text-sm font-medium transition">Delete</button>
+    </div>
+  </div>
+</div>
+ 
+<!-- SIDEBAR -->
+<aside class="w-[220px] bg-white border-r border-gray-200 flex flex-col justify-between min-h-screen">
+  <div>
+    <div class="flex items-center gap-3 px-5 py-6">
+      <div class="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center text-white font-bold text-sm">F</div>
+      <span class="text-lg font-bold text-gray-800">Foodiez</span>
+    </div>
+    <nav class="mt-2 px-3 space-y-1">
+      <button onclick="navigate('dashboard')" class="nav-link active w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium" id="nav-dashboard">
+        <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+        Dashboard
+      </button>
+      <button onclick="navigate('orders')" class="nav-link w-full flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-gray-100 rounded-lg text-sm font-medium" id="nav-orders">
+        <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><path d="M12 11h4"/><path d="M12 16h4"/><path d="M8 11h.01"/><path d="M8 16h.01"/></svg>
+        Orders
+        <span id="pending-badge" class="ml-auto bg-yellow-400 text-white text-[10px] font-bold px-1.5 py-0.5 rounded-full badge-pulse">0</span>
+      </button>
+      <button onclick="navigate('neworder')" class="nav-link w-full flex items-center gap-3 px-3 py-2.5 text-gray-600 hover:bg-gray-100 rounded-lg text-sm font-medium" id="nav-neworder">
+        <svg class="w-[18px] h-[18px]" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M8 12h8"/><path d="M12 8v8"/></svg>
+        New Order
+      </button>
+    </nav>
+  </div>
+  <div class="px-4 py-4 border-t border-gray-200">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 bg-gray-200 rounded-full flex items-center justify-center">
+        <svg class="w-4 h-4 text-gray-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>
+      </div>
+      <div>
+        <p class="text-sm font-semibold text-gray-800">Admin User</p>
+        <p class="text-xs text-gray-500">admin@foodiez.com</p>
+      </div>
+    </div>
+  </div>
+</aside>
+ 
+<main class="flex-1 overflow-y-auto scrollbar-hide">
+ 
+<!-- DASHBOARD PAGE -->
+<div id="page-dashboard" class="page active">
+  <header class="bg-white border-b border-gray-200 px-8 py-5 flex items-center justify-between sticky top-0 z-10">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-800">Dashboard Overview</h1>
+      <p class="text-sm text-gray-500 mt-0.5">Manage your restaurant orders in real-time</p>
+    </div>
+    <div class="flex items-center gap-4">
+      <button class="relative w-10 h-10 bg-gray-100 rounded-full flex items-center justify-center hover:bg-gray-200 transition">
+        <svg class="w-5 h-5 text-gray-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        <span id="notif-dot" class="absolute top-2 right-2.5 w-2 h-2 bg-red-500 rounded-full"></span>
+      </button>
+      <button onclick="navigate('neworder')" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 transition">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        New Order
+      </button>
+    </div>
+  </header>
+  <div class="px-8 py-6">
+    <!-- Stats -->
+    <div class="grid grid-cols-5 gap-4 mb-8">
+      <div class="bg-white border border-gray-200 rounded-xl p-5">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm text-gray-500 font-medium">Total Orders</span>
+          <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+            <svg class="w-4 h-4 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="8" y="2" width="8" height="4" rx="1"/><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/></svg>
+          </div>
+        </div>
+        <p id="stat-total" class="text-3xl font-bold text-gray-800">0</p>
+      </div>
+      <div class="bg-white border border-gray-200 rounded-xl p-5">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm text-gray-500 font-medium">Pending</span>
+          <div class="w-8 h-8 bg-yellow-100 rounded-lg flex items-center justify-center">
+            <svg class="w-4 h-4 text-yellow-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+        </div>
+        <p id="stat-pending" class="text-3xl font-bold text-gray-800">0</p>
+      </div>
+      <div class="bg-white border border-gray-200 rounded-xl p-5">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm text-gray-500 font-medium">Accepted</span>
+          <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+            <svg class="w-4 h-4 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M6 13.87A4 4 0 0 1 7.41 6a5.11 5.11 0 0 1 1.05-1.54 5 5 0 0 1 7.08 0A5.11 5.11 0 0 1 16.59 6 4 4 0 0 1 18 13.87V21H6Z"/><line x1="6" x2="18" y1="17" y2="17"/></svg>
+          </div>
+        </div>
+        <p id="stat-accepted" class="text-3xl font-bold text-gray-800">0</p>
+      </div>
+      <div class="bg-white border border-gray-200 rounded-xl p-5">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm text-gray-500 font-medium">Completed</span>
+          <div class="w-8 h-8 bg-blue-100 rounded-lg flex items-center justify-center">
+            <svg class="w-4 h-4 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+          </div>
+        </div>
+        <p id="stat-completed" class="text-3xl font-bold text-gray-800">0</p>
+      </div>
+      <div class="bg-white border border-gray-200 rounded-xl p-5">
+        <div class="flex items-center justify-between mb-3">
+          <span class="text-sm text-gray-500 font-medium">Rejected</span>
+          <div class="w-8 h-8 bg-red-100 rounded-lg flex items-center justify-center">
+            <svg class="w-4 h-4 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m15 9-6 6"/><path d="m9 9 6 6"/></svg>
+          </div>
+        </div>
+        <p id="stat-rejected" class="text-3xl font-bold text-gray-800">0</p>
+      </div>
+    </div>
+ 
+    <!-- Filter tabs dashboard -->
+    <div class="mb-6 flex items-center justify-between">
+      <h2 class="text-xl font-bold text-gray-800">Recent Orders</h2>
+      <div class="flex gap-1 bg-gray-100 rounded-lg p-1">
+        <button onclick="filterDashboard('all')" class="dashboard-tab active px-4 py-1.5 text-sm font-medium rounded-md transition" data-tab="all">All</button>
+        <button onclick="filterDashboard('pending')" class="dashboard-tab px-4 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-700 rounded-md transition" data-tab="pending">Pending</button>
+        <button onclick="filterDashboard('accepted')" class="dashboard-tab px-4 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-700 rounded-md transition" data-tab="accepted">Accepted</button>
+        <button onclick="filterDashboard('completed')" class="dashboard-tab px-4 py-1.5 text-sm font-medium text-gray-500 hover:text-gray-700 rounded-md transition" data-tab="completed">Completed</button>
+      </div>
+    </div>
+    <div id="dashboard-cards" class="grid grid-cols-3 gap-5"></div>
+  </div>
+</div>
+ 
+<!-- ORDERS PAGE -->
+<div id="page-orders" class="page">
+  <header class="bg-white border-b border-gray-200 px-8 py-5 flex items-center justify-between sticky top-0 z-10">
+    <div>
+      <h1 class="text-2xl font-bold text-gray-800">All Orders</h1>
+      <p class="text-sm text-gray-500 mt-0.5">View and manage all restaurant orders</p>
+    </div>
+    <div class="flex items-center gap-4">
+      <div class="relative">
+        <svg class="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <input id="search-input" type="text" placeholder="Search ..." oninput="handleSearch()" class="pl-9 pr-4 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 w-64">
+      </div>
+      <button onclick="navigate('neworder')" class="bg-blue-600 hover:bg-blue-700 text-white px-5 py-2.5 rounded-lg text-sm font-medium flex items-center gap-2 transition">
+        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+        New Order
+      </button>
+    </div>
+  </header>
+  <div class="px-8 py-6">
+    <div class="flex items-center justify-between mb-6">
+      <div class="flex gap-0" id="orders-tabs">
+        <button onclick="filterOrders('all')" class="filter-tab active px-4 py-2 text-sm font-medium text-blue-600 flex items-center gap-2" data-tab="all">All Orders <span id="count-all" class="bg-blue-100 text-blue-600 text-xs font-semibold px-2 py-0.5 rounded-full">0</span></button>
+        <button onclick="filterOrders('pending')" class="filter-tab px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 flex items-center gap-2 transition" data-tab="pending">Pending <span id="count-pending" class="bg-gray-100 text-gray-500 text-xs font-semibold px-2 py-0.5 rounded-full">0</span></button>
+        <button onclick="filterOrders('accepted')" class="filter-tab px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 flex items-center gap-2 transition" data-tab="accepted">Accepted <span id="count-accepted" class="bg-gray-100 text-gray-500 text-xs font-semibold px-2 py-0.5 rounded-full">0</span></button>
+        <button onclick="filterOrders('completed')" class="filter-tab px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 flex items-center gap-2 transition" data-tab="completed">Completed <span id="count-completed" class="bg-gray-100 text-gray-500 text-xs font-semibold px-2 py-0.5 rounded-full">0</span></button>
+        <button onclick="filterOrders('rejected')" class="filter-tab px-4 py-2 text-sm font-medium text-gray-500 hover:text-gray-700 flex items-center gap-2 transition" data-tab="rejected">Rejected <span id="count-rejected" class="bg-gray-100 text-gray-500 text-xs font-semibold px-2 py-0.5 rounded-full">0</span></button>
+      </div>
+    </div>
+    <div id="orders-cards" class="grid grid-cols-3 gap-5"></div>
+    <p id="no-orders" class="hidden text-center text-gray-400 py-16 text-sm">No orders found.</p>
+  </div>
+</div>
+ 
+<!-- NEW ORDER PAGE -->
+<div id="page-neworder" class="page">
+  <header class="bg-white border-b border-gray-200 px-8 py-5 sticky top-0 z-10">
+    <h1 class="text-2xl font-bold text-gray-800">Create New Order</h1>
+    <p class="text-sm text-gray-500 mt-0.5">Manually add a new order to the system</p>
+  </header>
+  <div class="px-8 py-8">
+    <div class="flex gap-8 max-w-5xl">
+      <!-- Preview Card -->
+      <div class="w-[280px] flex-shrink-0">
+        <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Order Preview</p>
+        <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+          <div class="h-1.5 bg-yellow-400"></div>
+          <div class="p-5">
+            <div class="flex items-center justify-between mb-3">
+              <div><h3 id="preview-name" class="text-base font-semibold text-gray-800">Customer</h3><p class="text-xs text-gray-400 mt-0.5">Today</p></div>
+              <span class="bg-yellow-100 text-yellow-700 text-xs font-semibold px-3 py-1 rounded-full">PENDING</span>
+            </div>
+            <div id="preview-items" class="space-y-2 mb-4 min-h-[60px]">
+              <div class="flex items-center gap-2 text-gray-300"><div class="w-1.5 h-1.5 bg-gray-200 rounded-full"></div><p class="text-sm">Item 1</p></div>
+            </div>
+            <div class="flex items-center justify-between pt-3 border-t border-gray-100">
+              <p id="preview-total" class="text-lg font-bold text-gray-800">0 MAD</p>
+            </div>
+          </div>
+        </div>
+      </div>
+ 
+      <!-- Form -->
+      <div class="flex-1 bg-white border border-gray-200 rounded-xl p-6">
+        <div class="mb-8">
+          <h3 class="text-base font-semibold text-gray-800 mb-4">Customer Details</h3>
+          <label class="block text-xs text-gray-500 mb-1.5">Customer Name</label>
+          <input id="form-customer" type="text" placeholder="e.g. John Doe" oninput="updatePreview()" class="w-full px-4 py-3 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-700 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
+        </div>
+ 
+        <div class="mb-8">
+          <div class="flex items-center justify-between mb-4">
+            <h3 class="text-base font-semibold text-gray-800">Order Items</h3>
+            <button type="button" onclick="addItemRow()" class="text-blue-600 text-sm font-medium flex items-center gap-1 hover:text-blue-700 transition">
+              <svg class="w-3 h-3" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="M12 5v14"/></svg>
+              Add Item
+            </button>
+          </div>
+          <div id="items-container" class="space-y-3"></div>
+        </div>
+ 
+        <div class="flex items-center justify-between py-4 border-t border-gray-100 mb-6">
+          <h3 class="text-base font-semibold text-gray-800">Total Price</h3>
+          <p id="form-total" class="text-xl font-bold text-gray-800">0 MAD</p>
+        </div>
+ 
+        <div class="flex items-center justify-end gap-3">
+          <button onclick="navigate('orders')" class="px-6 py-2.5 border border-gray-200 rounded-lg text-sm font-medium text-gray-600 hover:bg-gray-50 transition">Cancel</button>
+          <button onclick="submitOrder()" class="px-6 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-lg text-sm font-medium flex items-center gap-2 transition">
+            <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>
+            Submit Order
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+ <script src="script.js"></script>
+</main>
+</body>
+</html>
