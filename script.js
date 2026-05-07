@@ -197,10 +197,11 @@ function renderOrders() {
   updateStats();
   const search = (document.getElementById('search-input').value || '').toLowerCase();
   let filtered = currentOrdersFilter === 'all' ? orders : orders.filter(o => o.status === currentOrdersFilter);
-  if (search) filtered = filtered.filter(o =>
-    o.customerName.toLowerCase().includes(search) ||
-    o.items.some(name => name.toLowerCase().includes(search))
+  if (search) {
+  filtered = filtered.filter(o =>
+    o.customerName.toLowerCase().startsWith(search)
   );
+}
   const container = document.getElementById('orders-cards');
   const noMsg = document.getElementById('no-orders');
   container.innerHTML = '';
