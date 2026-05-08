@@ -228,3 +228,85 @@ function refreshAll() {
   if (activePage.id === 'page-orders') renderOrders();
   updateStats();
 }
+let formItems = [];
+
+function resetNewOrderForm() {
+  document.getElementById('form-customer').value = '';
+  formItems = [{ name: '', qty: 1 }];
+  renderFormItems();
+  updatePreview();
+}
+
+function addItemRow() {
+  formItems.push({ name: '', qty: 1 });
+  renderFormItems();
+  updatePreview();
+}
+
+function removeItemRow(idx) {
+  if (formItems.length <= 1) return;
+  formItems.splice(idx, 1);
+  renderFormItems();
+  updatePreview();
+}
+
+function renderFormItems() {
+  const container = document.getElementById('items-container');
+  container.innerHTML = '';
+  formItems.forEach((item, idx) => {
+    const price = MENU_PRICES[item.name] || 0;
+    const lineTotal = price * item.qty;
+    const div = document.createElement('div');
+    div.className = 'flex items-center gap-3';
+    div.innerHTML = `
+      <select onchange="updateItem(${idx}, 'name', this.value)" class="flex-1 px-3 py-2.5 bg-white border border-gray-200 rounded-lg text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        <option value="" disabled ${!item.name ? 'selected' : ''}>Select an item...</option>
+        ${Object.keys(MENU_PRICES).map(n => `<option value="${n}" ${item.name === n ? 'selected' : ''}>${n}</option>`).join('')}
+      </select>
+      <div class="flex items-center gap-2 px-3 py-2.5 bg-white border border-gray-200 rounded-lg">
+        <span class="text-xs text-gray-400">Qty:</span>
+        <input type="number" value="${item.qty}" min="1" oninput="updateItem(${idx}, 'qty', this.value)" class="w-12 text-sm text-gray-700 text-center focus:outline-none">
+      </div>
+      <div class="w-28 px-3 py-2.5 bg-gray-50 border border-gray-200 rounded-lg text-sm text-gray-500 text-center">${lineTotal} MAD</div>
+      <button type="button" onclick="removeItemRow(${idx})" class="w-8 h-8 flex items-center justify-center text-gray-300 hover:text-red-400 transition">
+        <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M18 6 6 18"/><path d="m6 6 12 12"/></svg>
+      </button>`;
+    container.appendChild(div);
+  });
+}
+
+function updateItem(idx, field, value) {
+  if (field === 'qty') formItems[idx].qty = Math.max(1, parseInt(value) || 1);
+  else formItems[idx][field] = value;
+  renderFormItems();
+  updatePreview();
+}
+
+function updatePreview() {
+  const name = document.getElementById('form-customer').value.trim() || 'Customer';
+  document.getElementById('preview-name').textContent = name;
+  const validItems = formItems.filter(i => i.name);
+  const total = validItems.reduce((s, i) => s + (MENU_PRICES[i.name] || 0) * i.qty, 0);
+  document.getElementById('form-total').textContent = total + ' MAD';
+  document.getElementById('preview-total').textContent = total + ' MAD';
+  const preview = document.getElementById('preview-items');
+  if (validItems.length === 0) {
+    preview.innerHTML = '<div class="flex items-center gap-2 text-gray-300"><div class="w-1.5 h-1.5 bg-gray-200 rounded-full"></div><p class="text-sm">Item 1</p></div>';
+  } else {
+    preview.innerHTML = validItems.map(i =>
+      `<div class="flex items-center gap-2"><div class="w-1.5 h-1.5 bg-gray-300 rounded-full"></div><p class="text-sm text-gray-600">${i.qty}x ${i.name}</p></div>`
+    ).join('');
+  }
+}
+
+function showToast(msg, type = 'success') {
+  const t = document.getElementById('toast');
+  document.getElementById('toast-msg').textContent = msg;
+  t.className = 'toast ' + type;
+  setTimeout(() => t.classList.add('show'), 10);
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// INIT
+resetNewOrderForm();
+fetchOrders();
