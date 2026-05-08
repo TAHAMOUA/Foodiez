@@ -3,7 +3,10 @@
     {
       "id": "1",
       "customerName": "Ahmed Z.",
-      "items": ["Margherita Pizza", "Soda"],
+      "items": [
+        "Margherita Pizza",
+        "Soda"
+      ],
       "totalPrice": 110,
       "status": "accepted",
       "createdAt": "Just now"
@@ -11,7 +14,10 @@
     {
       "id": "2",
       "customerName": "Sarah K.",
-      "items": ["Burger Menu", "Fries"],
+      "items": [
+        "Burger Menu",
+        "Fries"
+      ],
       "totalPrice": 190,
       "status": "accepted",
       "createdAt": "5 min ago"
@@ -19,7 +25,10 @@
     {
       "id": "3",
       "customerName": "Karim M.",
-      "items": ["Caesar Salad", "Water"],
+      "items": [
+        "Caesar Salad",
+        "Water"
+      ],
       "totalPrice": 65,
       "status": "accepted",
       "createdAt": "12 min ago"
@@ -27,7 +36,9 @@
     {
       "id": "5",
       "customerName": "Omar A.",
-      "items": ["Pasta Bolognese"],
+      "items": [
+        "Pasta Bolognese"
+      ],
       "totalPrice": 95,
       "status": "rejected",
       "createdAt": "2 hours ago"
@@ -36,5 +47,6 @@
   "settings": {
     "restaurantName": "Foodiez",
     "contactEmail": "contact@foodiez.com"
-  }
+  },
+  "$schema": "./node_modules/json-server/schema.json"
 }
